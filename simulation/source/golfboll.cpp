@@ -1,3 +1,5 @@
+// Björn Sundin, 2021
+
 #include <common.hpp>
 
 //------------------------------------------
@@ -5,8 +7,8 @@
 namespace constants {
 
 // https://sv.wikipedia.org/wiki/Golfboll
-constexpr auto ball_radius = 45q_mm;
-constexpr auto ball_mass = 45q_g;
+constexpr auto ball_radius = 45.q_mm;
+constexpr auto ball_mass = 45.q_g;
 
 // https://en.wikipedia.org/wiki/Drag_coefficient
 // 0.1 för mer turbulent, 0.47 för mer laminärt...
@@ -18,19 +20,20 @@ constexpr auto air_resistance = drag_coefficient*air_density*cross_sectional_are
 
 //------------------------------------------
 
-constexpr auto start_speed = 40q_m_per_s;
-constexpr auto start_angle = degrees(35);
+constexpr auto start_speed = 40.q_m_per_s;
+constexpr auto start_angle = degrees(45);
 
 // Medsols
-constexpr auto angular_velocity = degrees(360)/1.q_s;
-constexpr auto magnus_force_coefficient = 2.l*std::numbers::pi_v<long double>*air_density*angular_velocity*units::pow(ball_radius, 3);
+constexpr auto revolutions_per_second = 2.l;
+constexpr auto angular_velocity = revolutions_per_second*std::numbers::pi_v<long double>*2.l/1.q_s;
+auto const magnus_force_coefficient = 2.l*std::numbers::pi_v<long double>*air_density*angular_velocity*units::pow<3>(ball_radius);
 
 //------------------------------------------
 
 // constexpr auto time_steps = std::array{1.q_ms, 5.q_ms, 10.q_ms, 50.q_ms};
-constexpr auto time_steps = std::array{0.1q_ms, 1.q_ms, 5.q_ms, 10.q_ms};
+constexpr auto time_steps = std::array{1.q_ms};
 
-constexpr auto time = 2.q_s;
+constexpr auto time = 5.q_s;
 
 } // namespace constants
 
@@ -55,8 +58,8 @@ struct Simulation
         }
 
         if (is_spinning) {
-            auto const magnus_force = constants::magnus_force_coefficient*velocity.length();
-            auto const 
+            auto const magnus_force = constants::magnus_force_coefficient*Vec2{velocity.y, -velocity.x};
+            velocity += magnus_force/constants::ball_mass*time_step;
         }
         if (is_damped) {
             auto const damping_force = constants::air_resistance*velocity.length_squared();
@@ -85,32 +88,28 @@ decltype(auto) plot_simulation(Simulation simulation, units::physical::Time auto
         b = simulation.position.y.count();
         simulation.step(time_step);
     }
-    return matplot::plot(x, y)->line_width(1.f);
+    return matplot::plot(x, y)->line_width(3.f);
 }
 
 void plot_all() 
 {
     matplot::colororder(std::vector<std::vector<float>>{
-        {1.f, 0.4f, 0.4f}, {0.4f, 0.f, 0.f},
-        {0.4f, 1.f, 0.4f}, {0.f, 0.4f, 0.f},
-        {0.4f, 0.4f, 1.f}, {0.f, 0.f, 0.4f}
+        {1.f, 0.4f, 0.4f}, //{0.4f, 0.f, 0.f},
+        {0.4f, 1.f, 0.4f}, //{0.f, 0.4f, 0.f},
+        {0.4f, 0.4f, 1.f}, //{0.f, 0.f, 0.4f}
     });
 
     for (auto const time_step : constants::time_steps) 
     {
         plot_simulation({.is_damped = false, .is_spinning = false, .is_euler_cromer = false}, time_step);
-        plot_simulation({.is_damped = false, .is_spinning = false, .is_euler_cromer = true}, time_step);
+        // plot_simulation({.is_damped = false, .is_spinning = false, .is_euler_cromer = true}, time_step);
         plot_simulation({.is_damped = true, .is_spinning = false, .is_euler_cromer = false}, time_step);
-        plot_simulation({.is_damped = true, .is_spinning = false, .is_euler_cromer = true}, time_step);
+        // plot_simulation({.is_damped = true, .is_spinning = false, .is_euler_cromer = true}, time_step);
         plot_simulation({.is_damped = true, .is_spinning = true, .is_euler_cromer = false}, time_step);
-        plot_simulation({.is_damped = true, .is_spinning = true, .is_euler_cromer = true}, time_step);
+        // plot_simulation({.is_damped = true, .is_spinning = true, .is_euler_cromer = true}, time_step);
     }
 
-    auto const legend = matplot::legend({
-        "$F_g$", "$F_g$, Euler-Cromer", 
-        "$F_g+F_D$", "$F_g+F_D$, Euler-Cromer"
-        "$F_g+F_D+F_M$", "$F_g+F_D+F_M$, Euler-Cromer"
-    });
+    auto const legend = matplot::legend({"F_g", "F_g+F_D", "F_g+F_D+F_M"});
     legend->box(false);
     legend->location(matplot::legend::general_alignment::bottomright);
 }
@@ -131,6 +130,6 @@ int main()
 
     matplot::axis(matplot::tight);
 
-    matplot::save("results/pingisboll.svg");
-    matplot::save("results/pingisboll.jpeg");
+    matplot::save("results/golfboll.svg");
+    matplot::save("results/golfboll.jpeg");
 }

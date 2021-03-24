@@ -1,3 +1,5 @@
+# Björn Sundin, 2021
+
 cmake_minimum_required(VERSION 3.18.0)
 project(Simulation VERSION 0.1.0 LANGUAGES CXX)
 

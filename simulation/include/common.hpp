@@ -1,3 +1,5 @@
+// Björn Sundin, 2021
+
 #pragma once
 
 #include <numbers>
@@ -53,7 +55,7 @@ template<units::Quantity T>
 struct Vec2 {
     T x, y;
 
-    constexpr T length_squared() const {
+    constexpr auto length_squared() const {
         return x*x + y*y;
     }
     T length() const {
@@ -67,7 +69,7 @@ struct Vec2 {
     Vec2 rotated(si::angle<si::radian> const angle) {
         return Vec2{
             std::cos(angle.count())*x - std::sin(angle.count())*y,
-            std::sin(anlge.count())*x + std::cos(angle.count())*y
+            std::sin(angle.count())*x + std::cos(angle.count())*y
         };
     }
 
@@ -88,6 +90,10 @@ Vec2(T, T) -> Vec2<T>;
 template<units::Quantity A, units::Quantity B>
 constexpr auto operator+(Vec2<A> const lhs, Vec2<B> const rhs) {
     return Vec2{lhs.x + rhs.x, lhs.y + rhs.y};
+}
+template<units::Quantity A, units::Quantity B>
+constexpr auto operator-(Vec2<A> const lhs, Vec2<B> const rhs) {
+    return Vec2{lhs.x - rhs.x, lhs.y - rhs.y};
 }
 
 template<units::Quantity A, units::Quantity B>
