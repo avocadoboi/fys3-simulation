@@ -23,8 +23,8 @@ constexpr auto air_resistance = drag_coefficient*air_density*cross_sectional_are
 constexpr auto start_speed = 40.q_m_per_s;
 constexpr auto start_angle = degrees(45);
 
-// Positivt är medsols.
-constexpr auto revolutions_per_second = -3.l;
+// Positivt är motsols.
+constexpr auto revolutions_per_second = 4.l;
 constexpr auto angular_velocity = revolutions_per_second*std::numbers::pi_v<long double>*2.l/1.q_s;
 auto const magnus_force_coefficient = 2.l*std::numbers::pi_v<long double>*air_density*angular_velocity*units::pow<3>(ball_radius);
 
@@ -58,7 +58,7 @@ struct Simulation
         }
 
         if (is_spinning) {
-            auto const magnus_force = constants::magnus_force_coefficient*Vec2{velocity.y, -velocity.x};
+            auto const magnus_force = constants::magnus_force_coefficient*Vec2{-velocity.y, velocity.x};
             velocity += magnus_force/constants::ball_mass*time_step;
         }
         if (is_damped) {

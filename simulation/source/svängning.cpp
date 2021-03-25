@@ -17,7 +17,7 @@ constexpr auto start_pos = 1.q_m;
 constexpr auto start_velocity = 0.q_m_per_s;
 
 constexpr auto time_steps = std::array{0.1q_ms, 1.q_ms, 5.q_ms, 10.q_ms};
-constexpr auto time = 1.5q_s;
+constexpr auto time = 1.8q_s;
 
 } // namespace constants
 
@@ -107,7 +107,7 @@ void plot_all()
 }
 
 std::string get_file_name() {
-    auto name = fmt::format("results/svängning_dämpningsratio_{}", constants::damping_ratio);
+    auto name = fmt::format("results/oscillation_ratio_{}", constants::damping_ratio);
     std::ranges::replace(name, '.', '_');
     return name;
 }
@@ -117,7 +117,7 @@ std::string get_file_name() {
 int main() 
 {
     matplot::gcf()->reactive_mode(false);
-    matplot::gcf()->size(1600, 700);
+    matplot::gcf()->size(1000, 600);
     matplot::hold(true);
     // matplot::grid(true);
 
@@ -127,7 +127,5 @@ int main()
     
     plot_all();
 
-    auto const name = get_file_name();
-    matplot::save(name, "jpeg");
-    matplot::save(name, "svg");
+    matplot::save(get_file_name(), "svg");
 }

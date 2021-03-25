@@ -9,6 +9,8 @@
 
 \usepackage{amsmath}
 
+\usepackage[labelsep=period, labelfont=bf, textfont=it, skip=5pt]{caption}
+
 \usepackage[style=apa, citestyle=apa]{biblatex}
 \addbibresource{bibliography.bib}
 
@@ -30,37 +32,75 @@
 \end{titlepage}
 
 \section{Miljö och verktyg}
-Programmeringsspråket C++20 användes för samtliga simuleringar. Biblioteket \say{matplotplusplus} (\cite{matplotplusplus}) användes för att producera graferna och \say{mp-units} (\cite{mp-units}) användes för statiskt typade fysikaliska enheter. Användandet av mp-units i projektet gjorde att alla felberäkningar med enheter fångades automatiskt av kompilatorn.
+Programmeringsspråket C++20 användes för samtliga simuleringar. Biblioteket \say{matplotplusplus} (\cite{matplotplusplus}) användes för att producera graferna och \say{mp-units} (\cite{mp-units}) användes för statiskt typade fysikaliska enheter. 
+
+Användandet av mp-units i projektet gjorde att alla eventuella felberäkningar med enheter fångades automatiskt av kompilatorn innan programmet ens körs. Den här sortens statisk enhetskontroll är viktig att utnyttja i mjukvara som utför fysikaliska beräkningar - särskilt när kostnaden av felberäkningarna blir större, som i en pacemaker eller en raket.
 
 \section{Simulering av pingisboll}
+\begin{figure}[ht]
+    \centering
+    \caption{Simulering av pingisboll med och utan luftmotstånd samt med Eulers och Euler-Cromers metod.}
+    \includesvg[inkscapelatex=false, width=\textwidth]{pingisboll}
+    \label{fig:pingisboll}
+\end{figure}
+
 Pingisbollens radie var $r=2$ cm. Massan var $m=2.7$ g. Luftmotstånds\-koefficienten antogs vara $C_D=0.3$. Startfarten var $v_0=40$ m/s och startvinkeln var $\alpha=35^\circ$. Värdet på luftdensiteten som användes var $\rho=1.225$ kg/m$^3$. Tiden som simulerades var 3 s.
 
-Luftmotståndskraften beräknades genom $F_D=\frac{\pi}{2}r^2C_D\rho v^2$ eftersom bollen har tvärsnittsarean $A=\pi r^2$.
-
+Luftmotståndskraften beräknades genom: 
+\begin{equation*}
+    \vec{F_D}=-\hat{v}\cdot\frac{\pi}{2}r^2C_D\rho|\vec{v}|^2
+\end{equation*}
+Eftersom bollen har tvärsnittsarean $A=\pi r^2$. $\hat{v}$ är hastighetens enhetsvektor.
 Flera simuleringar med olika tidssteg samt med Eulers och Euler-Cromers metod gjordes. Tidsstegen $\Delta t$ som användes var 0.1 ms, 1 ms, 5 ms, 10 ms och 20 ms. Figur \ref{fig:pingisboll} visar graferna för alla simuleringarna. De mörkare banorna visar simuleringarna med Euler-Cromers metod och de ljusare banorna visar simuleringarna med Eulers metod.
 
 Man kan se att Eulers metod ger ett mer exakt resultat för dämpad kaströrelse jämfört med Euler-Cromers metod. Euler-Cromers metod förstärker dämpn\-ingen och bollen tappar energi fortare. Man ser det eftersom banorna konvergerar mot samma exakta lösning med lägre värden på $\Delta t$, men simuleringarna med Euler-Cromers metod avviker mer än Eulers metod för de större värdena på $\Delta t$.
 
 För fri kaströrelse avviker Eulers och Euler-Cromers metod lika mycket men åt olika håll.
 
-\begin{figure}[ht]
-    \centering
-    \includesvg[inkscapelatex=false, width=\textwidth]{pingisboll}
-    \caption{Simulering av pingisboll med och utan luftmotstånd samt med Eulers och Euler-Cromers metod.}
-    \label{fig:pingisboll}
-\end{figure}
-
 \section{Simulering av golfboll}
-Golfbollens radie var $r=22$ mm. Massan var $m=45$ g. Luftmotstånds\-koefficienten antogs vara 0.2, något mindre än för pingisbollen eftersom ytan är skrovligare. Startfarten var $v_0=40$ m/s och startvinkeln var $\alpha=45^\circ$. Vinkelhastigheten för simuleringen med magnuseffekten var 3 varv/s motsols, alltså $\omega=6\pi$ rad/s. Tiden som simulerades var 6 s.
-
-Dämpning av vinkelhastigheten räknades inte med i simuleringen. Den är alltså konstant i simuleringen, men i verkligheten hade den saktat ner över tid på grund av luftmotståndet.
-
 \begin{figure}[ht]
     \centering
-    \includesvg[inkscapelatex=false, width=\textwidth]{golfboll}
     \caption{Simulering av fri golfboll, golfboll med luftmotstånd och roterande golfboll med luftmotstånd.}
+    \includesvg[inkscapelatex=false, width=\textwidth]{golfboll}
     \label{fig:golfboll}
 \end{figure}
+Golfbollens radie var $r=22$ mm. Massan var $m=45$ g. Luftmotstånds\-koefficienten antogs vara 0.2, något mindre än för pingisbollen eftersom ytan är skrovligare. Startfarten var $v_0=40$ m/s och startvinkeln var $\alpha=45^\circ$. Vinkelhastigheten för simuleringen med magnuseffekten var 4 varv/s motsols, alltså $\omega=6\pi$ rad/s. Tiden som simulerades var 6 s och tidssteget 1 ms användes.
+
+Dämpning av vinkelhastigheten räknades inte med i simuleringen. Vinkelhastigheten är alltså konstant i simuleringen, men i verkligheten hade den saktat ner något över tid på grund av luftmotståndet.
+
+Luftmotståndet beräknades på samma sätt som för pingisbollen men med golfbollens parametrar. Magnuskraften beräknades enligt: 
+\begin{equation*}
+    \vec{F_M}=(-v_y, v_x)\cdot2\pi\rho\omega r^3
+\end{equation*}
+I det vanliga kartesiska koordinatsystemet där en positiv vinkelhastighet $\omega$ innebär motsols rotering. Hastighetsvektorn roteras 90$^\circ$ motsols eftersom trycket är högre på undersidan för en boll som rör sig åt höger med en positiv vinkelhastighet. Slow motion-video av golfslag (\cite{SlowMotionGolf}) studerades för att bekräfta vinkelhastighetens riktning.
+
+\section{Simulering av svängning}
+\begin{figure}[p]
+    \centering
+    \caption{Simulering av fri svängning.}
+    \includesvg[inkscapelatex=false, width=\textwidth]{oscillation_ratio_0_0}
+    \label{fig:oscillation_0_0}
+\end{figure}
+\begin{figure}[p]
+    \centering
+    \caption{Simulering av svagt dämpad svängning med $\zeta=0.3$.}
+    \includesvg[inkscapelatex=false, width=\textwidth]{oscillation_ratio_0_3}
+    \label{fig:oscillation_0_3}
+\end{figure}
+\begin{figure}[p]
+    \centering
+    \caption{Simulering av kritiskt dämpad svängning med $\zeta=1$.}
+    \includesvg[inkscapelatex=false, width=\textwidth]{oscillation_ratio_1_0}
+    \label{fig:oscillation_1_0}
+\end{figure}
+\begin{figure}[p]
+    \centering
+    \caption{Simulering av starkt dämpad svängning med $\zeta=2$.}
+    \includesvg[inkscapelatex=false, width=\textwidth]{oscillation_ratio_2_0}
+    \label{fig:oscillation_2_0}
+\end{figure}
+
+Fjädermassan var $m=0.3$ kg och fjäderkonstanten $k=15$ N/m. Startpositionen var $y_0=1$ m och startfarten $v_0=0$ m/s.
 
 \printbibliography
 
