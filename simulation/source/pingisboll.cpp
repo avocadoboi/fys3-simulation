@@ -7,7 +7,7 @@
 namespace constants {
     
 // https://sv.wikipedia.org/wiki/Bordtennis
-constexpr auto ball_radius = 4q_cm;
+constexpr auto ball_radius = 2q_cm;
 constexpr auto ball_mass = 2.7q_g;
 
 // https://en.wikipedia.org/wiki/Drag_coefficient
@@ -26,9 +26,9 @@ constexpr auto start_angle = degrees(35);
 //------------------------------------------
 
 // constexpr auto time_steps = std::array{1.q_ms, 5.q_ms, 10.q_ms, 50.q_ms};
-constexpr auto time_steps = std::array{0.1q_ms, 1.q_ms, 5.q_ms, 10.q_ms};
+constexpr auto time_steps = std::array{0.1q_ms, 1.q_ms, 5.q_ms, 10.q_ms, 20.q_ms};
 
-constexpr auto time = 2.q_s;
+constexpr auto time = 3.q_s;
 
 } // namespace constants
 
@@ -80,7 +80,7 @@ decltype(auto) plot_simulation(Simulation simulation, units::physical::Time auto
         b = simulation.position.y.count();
         simulation.step(time_step);
     }
-    return matplot::plot(x, y)->line_width(1.f);
+    return matplot::plot(x, y)->line_width(0.5f);
 }
 
 void plot_all() 
@@ -108,7 +108,7 @@ void plot_all()
 int main() 
 {
     matplot::gcf()->reactive_mode(false);
-    matplot::gcf()->size(1600, 700);
+    matplot::gcf()->size(700, 400);
     matplot::hold(true);
     matplot::grid(true);
     
@@ -120,5 +120,4 @@ int main()
     matplot::axis(matplot::tight);
 
     matplot::save("results/pingisboll.svg");
-    matplot::save("results/pingisboll.jpeg");
 }

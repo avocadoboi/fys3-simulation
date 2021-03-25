@@ -1,0 +1,67 @@
+\documentclass[12pt, a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[swedish]{babel}
+
+\usepackage{parskip}
+\usepackage{setspace}
+\usepackage[babel]{microtype}
+
+\usepackage{amsmath}
+
+\usepackage[style=apa, citestyle=apa]{biblatex}
+\addbibresource{bibliography.bib}
+
+\usepackage{svg}
+\svgpath{{bilder/}}
+
+\usepackage{dirtytalk}
+
+\begin{document}
+
+\begin{titlepage}
+    \begin{center}
+        \Huge{Simuleringsövning Fysik 3}\bigskip \\
+        \LARGE \today\vspace{1cm}\\
+        \large \setstretch{1.5}
+        \textbf{Elev:} Björn Sundin\\
+        \textbf{Handledare:} Carlo Ruberto
+    \end{center}
+\end{titlepage}
+
+\section{Miljö och verktyg}
+Programmeringsspråket C++20 användes för samtliga simuleringar. Biblioteket \say{matplotplusplus} (\cite{matplotplusplus}) användes för att producera graferna och \say{mp-units} (\cite{mp-units}) användes för statiskt typade fysikaliska enheter. Användandet av mp-units i projektet gjorde att alla felberäkningar med enheter fångades automatiskt av kompilatorn.
+
+\section{Simulering av pingisboll}
+Pingisbollens radie var $r=2$ cm. Massan var $m=2.7$ g. Luftmotstånds\-koefficienten antogs vara $C_D=0.3$. Startfarten var $v_0=40$ m/s och startvinkeln var $\alpha=35^\circ$. Värdet på luftdensiteten som användes var $\rho=1.225$ kg/m$^3$. Tiden som simulerades var 3 s.
+
+Luftmotståndskraften beräknades genom $F_D=\frac{\pi}{2}r^2C_D\rho v^2$ eftersom bollen har tvärsnittsarean $A=\pi r^2$.
+
+Flera simuleringar med olika tidssteg samt med Eulers och Euler-Cromers metod gjordes. Tidsstegen $\Delta t$ som användes var 0.1 ms, 1 ms, 5 ms, 10 ms och 20 ms. Figur \ref{fig:pingisboll} visar graferna för alla simuleringarna. De mörkare banorna visar simuleringarna med Euler-Cromers metod och de ljusare banorna visar simuleringarna med Eulers metod.
+
+Man kan se att Eulers metod ger ett mer exakt resultat för dämpad kaströrelse jämfört med Euler-Cromers metod. Euler-Cromers metod förstärker dämpn\-ingen och bollen tappar energi fortare. Man ser det eftersom banorna konvergerar mot samma exakta lösning med lägre värden på $\Delta t$, men simuleringarna med Euler-Cromers metod avviker mer än Eulers metod för de större värdena på $\Delta t$.
+
+För fri kaströrelse avviker Eulers och Euler-Cromers metod lika mycket men åt olika håll.
+
+\begin{figure}[ht]
+    \centering
+    \includesvg[inkscapelatex=false, width=\textwidth]{pingisboll}
+    \caption{Simulering av pingisboll med och utan luftmotstånd samt med Eulers och Euler-Cromers metod.}
+    \label{fig:pingisboll}
+\end{figure}
+
+\section{Simulering av golfboll}
+Golfbollens radie var $r=22$ mm. Massan var $m=45$ g. Luftmotstånds\-koefficienten antogs vara 0.2, något mindre än för pingisbollen eftersom ytan är skrovligare. Startfarten var $v_0=40$ m/s och startvinkeln var $\alpha=45^\circ$. Vinkelhastigheten för simuleringen med magnuseffekten var 3 varv/s motsols, alltså $\omega=6\pi$ rad/s. Tiden som simulerades var 6 s.
+
+Dämpning av vinkelhastigheten räknades inte med i simuleringen. Den är alltså konstant i simuleringen, men i verkligheten hade den saktat ner över tid på grund av luftmotståndet.
+
+\begin{figure}[ht]
+    \centering
+    \includesvg[inkscapelatex=false, width=\textwidth]{golfboll}
+    \caption{Simulering av fri golfboll, golfboll med luftmotstånd och roterande golfboll med luftmotstånd.}
+    \label{fig:golfboll}
+\end{figure}
+
+\printbibliography
+
+\end{document}

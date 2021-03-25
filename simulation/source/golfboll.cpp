@@ -7,7 +7,7 @@
 namespace constants {
 
 // https://sv.wikipedia.org/wiki/Golfboll
-constexpr auto ball_radius = 45.q_mm;
+constexpr auto ball_radius = 22.q_mm;
 constexpr auto ball_mass = 45.q_g;
 
 // https://en.wikipedia.org/wiki/Drag_coefficient
@@ -23,8 +23,8 @@ constexpr auto air_resistance = drag_coefficient*air_density*cross_sectional_are
 constexpr auto start_speed = 40.q_m_per_s;
 constexpr auto start_angle = degrees(45);
 
-// Medsols
-constexpr auto revolutions_per_second = 2.l;
+// Positivt är medsols.
+constexpr auto revolutions_per_second = -3.l;
 constexpr auto angular_velocity = revolutions_per_second*std::numbers::pi_v<long double>*2.l/1.q_s;
 auto const magnus_force_coefficient = 2.l*std::numbers::pi_v<long double>*air_density*angular_velocity*units::pow<3>(ball_radius);
 
@@ -33,7 +33,7 @@ auto const magnus_force_coefficient = 2.l*std::numbers::pi_v<long double>*air_de
 // constexpr auto time_steps = std::array{1.q_ms, 5.q_ms, 10.q_ms, 50.q_ms};
 constexpr auto time_steps = std::array{1.q_ms};
 
-constexpr auto time = 5.q_s;
+constexpr auto time = 6.q_s;
 
 } // namespace constants
 
@@ -119,7 +119,7 @@ void plot_all()
 int main() 
 {
     matplot::gcf()->reactive_mode(false);
-    matplot::gcf()->size(1600, 700);
+    matplot::gcf()->size(700, 400);
     matplot::hold(true);
     matplot::grid(true);
     
@@ -131,5 +131,4 @@ int main()
     matplot::axis(matplot::tight);
 
     matplot::save("results/golfboll.svg");
-    matplot::save("results/golfboll.jpeg");
 }
