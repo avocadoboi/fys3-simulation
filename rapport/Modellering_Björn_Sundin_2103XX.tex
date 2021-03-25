@@ -34,7 +34,7 @@
 \section{Miljö och verktyg}
 Programmeringsspråket C++20 användes för samtliga simuleringar. Biblioteket \say{matplotplusplus} (\cite{matplotplusplus}) användes för att producera graferna och \say{mp-units} (\cite{mp-units}) användes för statiskt typade fysikaliska enheter. 
 
-Användandet av mp-units i projektet gjorde att alla eventuella felberäkningar med enheter fångades automatiskt av kompilatorn innan programmet ens körs. Den här sortens statisk enhetskontroll är viktig att utnyttja i mjukvara som utför fysikaliska beräkningar - särskilt när kostnaden av felberäkningarna blir större, som i en pacemaker eller en raket.
+Användandet av mp-units i projektet gjorde att alla eventuella felberäkningar med enheter fångades automatiskt av kompilatorn innan programmet ens kördes. Den här sortens statiska enhetskontroll är viktig att utnyttja i mjukvara som utför fysikaliska beräkningar - särskilt när kostnaden av felberäkningarna blir större, som hos mjukvaran i en pacemaker eller en raket.
 
 \section{Simulering av pingisboll}
 \begin{figure}[ht]
@@ -77,7 +77,7 @@ I det vanliga kartesiska koordinatsystemet där en positiv vinkelhastighet $\ome
 \section{Simulering av svängning}
 \begin{figure}[p]
     \centering
-    \caption{Simulering av fri svängning.}
+    \caption{Simulering av fri svängning, $\zeta=0$.}
     \includesvg[inkscapelatex=false, width=\textwidth]{oscillation_ratio_0_0}
     \label{fig:oscillation_0_0}
 \end{figure}
@@ -100,8 +100,11 @@ I det vanliga kartesiska koordinatsystemet där en positiv vinkelhastighet $\ome
     \label{fig:oscillation_2_0}
 \end{figure}
 
-Fjädermassan var $m=0.3$ kg och fjäderkonstanten $k=15$ N/m. Startpositionen var $y_0=1$ m och startfarten $v_0=0$ m/s.
+Fjädermassan var $m=0.3$ kg och fjäderkonstanten $k=15$ N/m. Startpositionen var $y_0=1$ m och startfarten $v_0=0$ m/s. Figurerna \ref{fig:oscillation_0_0}-\ref{fig:oscillation_2_0} visar grafer av position, fart och acceleration över tid för simuleringar med olika dämpningsratio $\zeta$, definierad som $\frac{c}{c_c}$, där $c$ är den faktiska dämpningskoefficienten och $c_c$ är dämpningskoefficienten för kritisk dämpning, $2\sqrt{mk}$.
 
+Varje graf visar simuleringar med tidsstegen 0.1 ms, 1 ms, 5 ms, och 10 ms. Lägg märke till att accelerationen har en egen y-axel med annan skala eftersom den har en storleksordning större värden än positionen. De mörka linjerna är som med pingisbollen simuleringar med Euler-Cromers metod och de ljusa Eulers metod. Till skillnad från simuleringar av kast med luftmotstånd, ger Euler-Cromers metod mycket mer exakta resultat jämfört med Eulers metod för svängningsrörelse. I simuleringarna med Eulers metod ökar energin hos fjädern för varje svängning märkvärdigt för större värden av $\Delta t$.
+
+\clearpage
 \printbibliography
 
 \end{document}
